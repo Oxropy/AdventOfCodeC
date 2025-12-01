@@ -3,4 +3,6 @@ project(AdventOfCodeC C)
 
 set(CMAKE_C_STANDARD 23)
 
-add_executable(AdventOfCodeC main.c)
+add_executable(AdventOfCodeC
+        src/year2025/Day01.c
+        src/file_reader_helper.c)
