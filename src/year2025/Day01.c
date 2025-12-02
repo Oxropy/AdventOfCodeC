@@ -8,8 +8,8 @@ typedef struct {
     int currentPosition;
 }State;
 
-void part1(const char* filename);
-void part2(const char* filename);
+static void part1(const char* filename);
+static void part2(const char* filename);
 
 int main() {
     const char* filename = "../../resources/year2025/Day01.txt";
@@ -88,13 +88,13 @@ void process_line2(const char* line, void* context) {
     state->nullCount += quotient;
 }
 
-void part1(const char* filename) {
+static void part1(const char* filename) {
     State state = {0, 50};
     for_each_line(filename, process_line1, &state);
     printf("Part 1: %d\n", state.nullCount);
 }
 
-void part2(const char* filename) {
+static void part2(const char* filename) {
     State state = {0, 50};
     for_each_line(filename, process_line2, &state);
     printf("Part 2: %d\n", state.nullCount);
