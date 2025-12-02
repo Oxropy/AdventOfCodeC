@@ -1,10 +1,7 @@
-//
-// Created by alex on 01.12.25.
-//
-
 #define GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef void (*LineHandler)(const char* line, void* context);
 
@@ -19,6 +16,11 @@ void for_each_line(const char* filename, const LineHandler handler, void* contex
     size_t len = 0;
 
     while (getline(&line, &len, file) != -1) {
+        const size_t size = strlen(line);
+        if (size > 0 && line[size - 1] == '\n') {
+            line[size - 1] = '\0';
+        }
+
         handler(line, context);
     }
 
