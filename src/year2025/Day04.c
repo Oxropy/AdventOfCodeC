@@ -9,7 +9,7 @@ static void part2(const char* filename);
 int main() {
     const char* filename = "../../resources/year2025/Day04.txt";
     part1(filename);
-    // part2(filename);
+    part2(filename);
     return 0;
 }
 
@@ -20,19 +20,7 @@ static uint32_t is_set(const uint32_t rows, const uint32_t cols, char array[rows
 }
 
 
-static void part1(const char* filename) {
-    const uint32_t rows = 139;
-    const uint32_t cols = 139;
-    char array[rows][cols];
-    int32_t real_rows;
-    int32_t real_cols;
-    const uint8_t parse_result = parse_file_to_variable_length_array(filename, rows, cols, array, &real_rows, &real_cols);
-    if (parse_result != 0) {
-        return;
-    }
-
-    uint32_t count = 0;
-
+static void calculate_surrounding(const uint32_t rows, const uint32_t cols, char array[139][139], const int32_t real_rows, const int32_t real_cols, uint32_t *count, bool remove_hit) {
     for (uint8_t row = 0; row < real_rows; row++) {
         for (uint8_t col = 0; col < real_cols; col++) {
             if (array[row][col] == '.') continue;
@@ -48,11 +36,52 @@ static void part1(const char* filename) {
 
 
             if (sum < 4) {
-                count++;
+                (*count)++;
+                if (remove_hit) {
+                    array[row][col] = '.';
+                }
             }
         }
     }
+}
+
+static void part1(const char* filename) {
+    const uint32_t rows = 139;
+    const uint32_t cols = 139;
+    char array[rows][cols];
+    int32_t real_rows;
+    int32_t real_cols;
+    const uint8_t parse_result = parse_file_to_variable_length_array(filename, rows, cols, array, &real_rows, &real_cols);
+    if (parse_result != 0) {
+        return;
+    }
+
+    uint32_t count = 0;
+
+    calculate_surrounding(rows, cols, array, real_rows, real_cols, &count, false);
 
     printf("Part 1: %d\n", count);
+}
+
+static void part2(const char* filename) {
+    const uint32_t rows = 139;
+    const uint32_t cols = 139;
+    char array[rows][cols];
+    int32_t real_rows;
+    int32_t real_cols;
+    const uint8_t parse_result = parse_file_to_variable_length_array(filename, rows, cols, array, &real_rows, &real_cols);
+    if (parse_result != 0) {
+        return;
+    }
+
+    uint32_t count = 0;
+    uint32_t count2 = -1;
+
+    while (count != count2) {
+        count2 = count;
+        calculate_surrounding(rows, cols, array, real_rows, real_cols, &count, true);
+    }
+
+    printf("Part 2: %d\n", count);
 }
 
