@@ -28,6 +28,40 @@ void for_each_line(const char* filename, const LineHandler handler, void* contex
     fclose(file);
 }
 
+void for_each_line_with_split(const char* filename, const LineHandler handler1, void* context1, const LineHandler handler2, void* context2) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        perror("Could not open file");
+        return;
+    }
+
+    char* line = NULL;
+    size_t len = 0;
+
+    bool blank_line = false;
+    while (getline(&line, &len, file) != -1) {
+        const size_t size = strlen(line);
+        if (size <= 1) {
+            blank_line = true;
+            continue;
+        }
+
+        if (line[size - 1] == '\n') {
+            line[size - 1] = '\0';
+        }
+
+        if (blank_line) {
+            handler2(line, context2);
+        } else {
+            handler1(line, context1);
+        }
+
+    }
+
+    free(line);
+    fclose(file);
+}
+
 int parse_file_to_variable_length_array(const char* filename, const int max_rows, const int max_cols,
                            char grid[max_rows][max_cols], int* actual_rows, int* actual_cols) {
     FILE* file = fopen(filename, "r");
